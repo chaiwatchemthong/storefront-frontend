@@ -69,17 +69,20 @@ export default function MarketplacePage() {
             {products.map(p => (
               <div key={p.id} className="product-card">
                 <div className="card-img" onClick={() => navigate(`/products/${p.id}`)}>
-                  {p.image ? <img src={p.image} alt={p.title} /> : <span className="no-img">📦</span>}
-                  {p.quantity === 0 && <div className="sold-out">หมดแล้ว</div>}
+                  {/* 💡 ปรับชื่อคีย์รูปภาพทางเลือก และตัวเช็กสินค้าหมดสต็อก (stock === 0) */}
+                  {p.image ? <img src={p.image} alt={p.name} /> : <span className="no-img">📦</span>}
+                  {p.stock === 0 && <div className="sold-out">หมดแล้ว</div>}
                 </div>
                 <div className="card-body">
-                  <h3 className="card-title" onClick={() => navigate(`/products/${p.id}`)}>{p.title}</h3>
+                  {/* 💡 ปรับชื่อฟิลด์หัวข้อสินค้าเป็น p.name */}
+                  <h3 className="card-title" onClick={() => navigate(`/products/${p.id}`)}>{p.name}</h3>
                   <p className="card-seller">โดย {p.seller_name}</p>
                   <div className="card-footer">
-                    <span className="card-price">฿{Number(p.unit_price).toLocaleString()}</span>
+                    {/* 💡 ปรับคีย์แสดงผลราคาเพื่อแก้บั๊กตัวแดงบรรทัดที่ 79 (p.price) */}
+                    <span className="card-price">฿{Number(p.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     <button
                       className="btn-add"
-                      disabled={p.quantity === 0 || adding === p.id}
+                      disabled={p.stock === 0 || adding === p.id}
                       onClick={() => addToCart(p.id)}
                     >
                       {adding === p.id ? '...' : '+'}

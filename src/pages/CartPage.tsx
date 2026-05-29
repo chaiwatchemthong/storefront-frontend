@@ -33,7 +33,8 @@ export default function CartPage() {
     }
   }
 
-  const total = items.reduce((s, i) => s + Number(i.product.unit_price) * i.quantity, 0)
+  // 💡 ปรับการคำนวณราคารวมทั้งหมดให้ใช้ .price แทน .unit_price
+  const total = items.reduce((s, i) => s + Number(i.product.price) * i.quantity, 0)
 
   if (done) return (
     <div className="page">
@@ -72,13 +73,19 @@ export default function CartPage() {
               {items.map(item => (
                 <div key={item.id} className="cart-item">
                   <div className="cart-img">
-                    {item.product.image ? <img src={item.product.image} alt={item.product.title} /> : '📦'}
+                    {/* 💡 ปรับชื่อคีย์รูปภาพทางเลือกเป็น .name */}
+                    {item.product.image ? <img src={item.product.image} alt={item.product.name} /> : '📦'}
                   </div>
                   <div className="cart-info">
-                    <h4>{item.product.title}</h4>
-                    <p>฿{Number(item.product.unit_price).toLocaleString()} × {item.quantity}</p>
+                    {/* 💡 ปรับชื่อฟิลด์หัวข้อสินค้าเป็น .name */}
+                    <h4>{item.product.name}</h4>
+                    {/* 💡 ปรับคีย์ราคาแสดงผลเป็น .price */}
+                    <p>฿{Number(item.product.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} × {item.quantity}</p>
                   </div>
-                  <div className="cart-subtotal">฿{(Number(item.product.unit_price) * item.quantity).toLocaleString()}</div>
+                  {/* 💡 ปรับคีย์ราคารวมของแต่ละรายการเป็น .price */}
+                  <div className="cart-subtotal">
+                    ฿{(Number(item.product.price) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </div>
                   <button className="btn-remove" onClick={() => remove(item.id)}>✕</button>
                 </div>
               ))}
@@ -87,7 +94,10 @@ export default function CartPage() {
             <div className="cart-summary">
               <h3>สรุปคำสั่งซื้อ</h3>
               <div className="summary-row"><span>รายการ</span><span>{items.length} รายการ</span></div>
-              <div className="summary-row total"><span>ยอดรวม</span><span>฿{total.toLocaleString()}</span></div>
+              <div className="summary-row total">
+                <span>ยอดรวม</span>
+                <span>฿{total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
               <button className="btn-primary" onClick={checkout} disabled={checkingOut}>
                 {checkingOut ? 'กำลังดำเนินการ...' : 'ยืนยันการสั่งซื้อ'}
               </button>

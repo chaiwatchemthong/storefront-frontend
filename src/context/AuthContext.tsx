@@ -24,6 +24,7 @@ interface AuthContextType {
     last_name: string
   ) => Promise<any>
   logout: () => void
+  devLogin: (role: 'seller' | 'buyer') => void
   loading: boolean
 }
 
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // ✅ ฟังก์ชัน Register (แก้ไขส่ง 6 พารามิเตอร์ครบถ้วนเข้าบอดี้ Axios)
+  // ฟังก์ชัน Register
   async function register(
     username: string, 
     email: string, 
@@ -78,14 +79,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         role,
-        first_name,  // 🔥 ส่งไป Django
-        last_name    // 🔥 ส่งไป Django
+        first_name,
+        last_name
       })
       return response.data
     } catch (error) {
       console.error('Error at auth register view:', error)
       throw error
     }
+  }
+
+  // 💡 ✅ เขียนตรรกะจำลองข้อมูลสำหรับฟังก์ชัน devLogin
+  function devLogin(role: 'seller' | 'buyer') {
+    const mockUser: User = {
+      id: 999, // ID จำลองสำหรับ Dev
+      username: `dev_${role}`,
+      email: `dev_${role}@storefront.com`,
+      role: role,
+      first_name: role === 'seller' ? 'สมชาย (คนขาย)' : 'สมหมาย (คนซื้อ)',
+      last_name: 'พัฒนาตนเอง'
+    }
+    const mockToken = 'mock-developer-access-token'
+    
+    setToken(mockToken)
+    setUser(mockUser)
+    localStorage.setItem('access_token', mockToken)
+    localStorage.setItem('user_data', JSON.stringify(mockUser))
+    axios.defaults.headers.common['Authorization'] = `Bearer ${mockToken}`
   }
 
   function logout() {
@@ -97,7 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
+    // 💡 ✅ โยนฟังก์ชัน devLogin บรรจุเพิ่มเข้าไปในช่อง value ของ Provider เรียบร้อยแล้ว
+    <AuthContext.Provider value={{ user, token, login, register, logout, devLogin, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   )

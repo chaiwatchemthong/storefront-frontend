@@ -24,8 +24,8 @@ export default function ProductDetailPage() {
     setAdding(false)
   }
 
-  if (loading) return <div className="page"><div className="empty-state">กำลังโหลด...</div></div>
-  if (!product) return <div className="page"><div className="empty-state">ไม่พบสินค้า</div></div>
+  if (loading) return <div className="page"><div className="empty-state">กำลังโหลดรายละเอียดสินค้า...</div></div>
+  if (!product) return <div className="page"><div className="empty-state">ไม่พบสินค้าชิ้นนี้</div></div>
 
   return (
     <div className="page">
@@ -40,21 +40,30 @@ export default function ProductDetailPage() {
       <div className="container">
         <div className="detail-layout">
           <div className="detail-img">
-            {product.image ? <img src={product.image} alt={product.title} /> : <div className="no-img-lg">📦</div>}
+            {/* 💡 ปรับชื่อคีย์รูปภาพทางเลือกเป็น .name */}
+            {product.image ? <img src={product.image} alt={product.name} /> : <div className="no-img-lg">📦</div>}
           </div>
           <div className="detail-info">
-            <h2>{product.title}</h2>
+            {/* 💡 ปรับชื่อฟิลด์หัวข้อสินค้าเป็น .name */}
+            <h2>{product.name}</h2>
             <p className="detail-seller">ขายโดย {product.seller_name}</p>
-            <div className="detail-price">฿{Number(product.unit_price).toLocaleString()}</div>
-            <div className={`detail-stock ${product.quantity === 0 ? 'out' : product.quantity <= 5 ? 'low' : 'ok'}`}>
-              {product.quantity === 0 ? 'หมดสต็อก' : `มีสินค้า ${product.quantity} ชิ้น`}
+            {/* 💡 ปรับคีย์ราคาแสดงผลเป็น .price เพื่อป้องกันการแสดงผลเป็น NaN */}
+            <div className="detail-price">฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            {/* 💡 ปรับเช็กสถานะสต็อกและตัวเลขสินค้าคงเหลือผ่านคีย์ .stock */}
+            <div className={`detail-stock ${product.stock === 0 ? 'out' : product.stock <= 5 ? 'low' : 'ok'}`}>
+              {product.stock === 0 ? 'หมดสต็อก' : `มีสินค้าในสต็อก ${product.stock} ชิ้น`}
             </div>
             <p className="detail-desc">{product.description}</p>
+            
             {added ? (
               <div className="added-msg">✅ เพิ่มลงตะกร้าแล้ว — <button className="link-btn" onClick={() => navigate('/cart')}>ดูตะกร้า</button></div>
             ) : (
-              <button className="btn-primary btn-lg" onClick={addToCart} disabled={product.quantity === 0 || adding}>
-                {adding ? 'กำลังเพิ่ม...' : product.quantity === 0 ? 'หมดสต็อก' : '🛒 เพิ่มลงตะกร้า'}
+              <button 
+                className="btn-primary btn-lg" 
+                onClick={addToCart} 
+                disabled={product.stock === 0 || adding}
+              >
+                {adding ? 'กำลังเพิ่ม...' : product.stock === 0 ? 'หมดสต็อก' : '🛒 เพิ่มลงตะกร้า'}
               </button>
             )}
           </div>
