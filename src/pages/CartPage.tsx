@@ -11,8 +11,13 @@ export default function CartPage() {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    cartApi.get().then(setItems).finally(() => setLoading(false))
-  }, [])
+  cartApi.get()
+    .then(data => {
+      console.log(data)
+      setItems(data)
+    })
+    .finally(() => setLoading(false))
+}, [])
 
   async function remove(id: number) {
     await cartApi.remove(id)

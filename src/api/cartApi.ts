@@ -7,9 +7,12 @@ export const cartApi = {
     return data
   },
   add: async (productId: number, quantity: number): Promise<CartItem> => {
-    const { data } = await client.post('/cart/', { product_id: productId, quantity })
-    return data
-  },
+  const { data } = await client.post('/cart/', {
+  product_id: productId,
+  quantity
+})
+  return data
+},
   remove: async (itemId: number): Promise<void> => {
     await client.delete(`/cart/${itemId}/`)
   },

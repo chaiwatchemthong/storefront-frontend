@@ -11,12 +11,12 @@ export interface AuthUser {
 // 💡 อัปเดตโครงสร้างสินค้าให้ตรงกับโมเดล Django หลังบ้าน
 export interface Product {
   id: number
-  seller_id: number
-  seller_name: string
-  name: string            // เปลี่ยนจาก title -> name
+  owner: number
+  seller_name?: string
+  name: string
   description: string
-  price: string           // เปลี่ยนจาก unit_price -> price (รับเป็น string จาก API ก่อนนำไปแปลง)
-  stock: number           // เปลี่ยนจาก quantity -> stock
+  price: string
+  stock: number
   image: string | null
   created_at: string
 }

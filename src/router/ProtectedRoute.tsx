@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { DevToolbar } from '../dev/DevToolbar'
+// import { DevToolbar } from '../dev/DevToolbar'
 
 interface Props { 
   // 💡 ปรับสเปกไทป์ให้ล้อไปตามอินเทอร์เฟซของบทบาทผู้ใช้จริงในระบบ
@@ -22,7 +22,7 @@ export function ProtectedRoute({ allowedRole }: Props) {
     // 💡 เปิดพื้นที่ให้ DevToolbar แสดงผลในกรณีติดล็อก เพื่อให้โปรแกรมเมอร์กดจำลองสิทธิ์ข้ามหน้าไปเทสระบบได้ทันที
     return (
       <>
-        <DevToolbar />
+        
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh', gap: '1rem', color: '#888' }}>
           <div style={{ fontSize: '3rem' }}>🛠️</div>
           <p style={{ fontSize: '15px' }}>โหมดนักพัฒนา — คลิกสลับ Role ด้านล่างเพื่อจำลองเข้าสู่ระบบ</p>
@@ -41,7 +41,6 @@ export function ProtectedRoute({ allowedRole }: Props) {
     <>
       <Outlet />
       {/* 💡 แปะ DevToolbar สแตนด์บายไว้ที่มุมขวาล่างในทุกหน้าเพื่อให้สลับทดสอบ Logic ซื้อ-ขาย ได้สะดวกรวดเร็ว */}
-      <DevToolbar />
     </>
   )
 }
